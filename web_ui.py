@@ -147,6 +147,15 @@ def _build_html_page() -> str:
     }
     button:hover { background: #1d4ed8; }
     button:disabled { background: #93c5fd; cursor: not-allowed; }
+    .examples { margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .example-btn {
+      margin-top: 0;
+      background: #e5e7eb;
+      color: #374151;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.9rem;
+    }
+    .example-btn:hover { background: #d1d5db; }
     .result-section { margin-top: 2rem; }
     .verdict-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
     .verdict-label { font-weight: 600; font-size: 1rem; }
@@ -205,6 +214,11 @@ GitHub token: ghp_1234567890abcdefABCDEF1234567890abcd
 DB password = SuperSecret123
 Email me at jane.doe@company.com
 Card on file: 4111 1111 1111 1111</textarea>
+  <div class="examples">
+    <button type="button" class="example-btn" onclick="loadExample('block')">Secrets example (BLOCK)</button>
+    <button type="button" class="example-btn" onclick="loadExample('warn')">Personal-data example (WARN)</button>
+    <button type="button" class="example-btn" onclick="loadExample('safe')">Clean example (SAFE)</button>
+  </div>
   <button id="scan-btn" onclick="runScan()">Scan</button>
   <p id="error-msg" class="error-msg" style="display:none"></p>
 
@@ -227,6 +241,23 @@ Card on file: 4111 1111 1111 1111</textarea>
   </div>
 
   <script>
+    const EXAMPLES = {
+      block: `Hey Kiro, help me debug my deploy config.
+AWS key: AKIAIOSFODNN7EXAMPLE
+OpenAI key: sk-Ab12Cd34Ef56Gh78Ij90Kl12Mn34Op56
+GitHub token: ghp_1234567890abcdefABCDEF1234567890abcd
+DB password = SuperSecret123
+Email me at jane.doe@company.com
+Card on file: 4111 1111 1111 1111`,
+      warn: `Can you summarise this ticket and email it to jane.doe@company.com?`,
+      safe: `Can you help me write a haiku about the ocean?`
+    };
+
+    function loadExample(kind) {
+      document.getElementById('input-text').value = EXAMPLES[kind];
+      document.getElementById('result-section').style.display = 'none';
+    }
+
     async function runScan() {
       const btn = document.getElementById('scan-btn');
       const errMsg = document.getElementById('error-msg');
