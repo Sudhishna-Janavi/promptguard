@@ -140,12 +140,21 @@ def _deduplicate(raw: List[Finding]) -> List[Finding]:
 
 def _verdict(findings: List[Finding]) -> str:
     """Compute verdict string from the deduplicated findings list."""
-    ...
+    if any(f.severity == "HIGH" for f in findings):
+        return "BLOCK"
+    if any(f.severity in ("MEDIUM", "LOW") for f in findings):
+        return "WARN"
+    return "SAFE"
 
 
 def _redact_text(text: str, findings: List[Finding]) -> str:
     """Replace each finding span with [REDACTED:<TYPE>], right-to-left."""
-    ...
+    if not findings:
+        return text
+    # Process right-to-left so earlier offsets remain valid
+    for f in sorted(findings, key=lambda f: f.start, reverse=True):
+        text = text[:f.start] + f"[REDACTED:{f.type}]" + text[f.end:]
+    return text
 
 
 def scan(text: str) -> ScanResult:
@@ -157,7 +166,13 @@ def scan(text: str) -> ScanResult:
     Returns:
         ScanResult with verdict, findings, and redacted_text.
     """
-    ...
+    if not text:
+        return ScanResult("SAFE", [], "")
+    raw = _collect_raw(text)
+    findings = _deduplicate(raw)
+    verdict = _verdict(findings)
+    redacted_text = _redact_text(text, findings)
+    return ScanResult(verdict=verdict, findings=findings, redacted_text=redacted_text)
 
 
 def redact(text: str) -> str:
@@ -169,4 +184,4 @@ def redact(text: str) -> str:
     Returns:
         String with every detected span replaced by [REDACTED:<TYPE>].
     """
-    ...
+    return scan(text).redacted_text
