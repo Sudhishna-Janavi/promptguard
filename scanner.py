@@ -45,11 +45,11 @@ PATTERNS = [
     (re.compile(r"AIza[0-9A-Za-z\-_]{35}"),                                                                    "GOOGLE_API_KEY",     "HIGH",   1),
     (re.compile(r"(?:ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9_]{82})"),                                      "GITHUB_TOKEN",       "HIGH",   1),
     (re.compile(r"xox[baprs]-[0-9a-zA-Z\-]{10,}"),                                                            "SLACK_TOKEN",        "HIGH",   1),
-    (re.compile(r"[A-Za-z0-9\-_]{10,}\.[A-Za-z0-9\-_]{10,}\.[A-Za-z0-9\-_]{10,}"),                           "JWT",                "HIGH",   1),
+    (re.compile(r"(?<![A-Za-z0-9\-_])[A-Za-z0-9\-_]{10,}\.[A-Za-z0-9\-_]{10,}\.[A-Za-z0-9\-_]{10,}"),      "JWT",                "HIGH",   1),
     (re.compile(r"(?i)Bearer\s+(.{8,})"),                                                                      "BEARER_TOKEN",       "HIGH",   1),
     (re.compile(r"-----BEGIN.*?PRIVATE KEY-----", re.DOTALL),                                                  "PRIVATE_KEY",        "HIGH",   1),
     (re.compile(r"(?i)(?:password|passwd|secret|token|api_key|apikey)\s*(?:=|:|=>)\s*(.{4,1000})"),            "GENERIC_SECRET",     "HIGH",   0),
-    (re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"),                                        "EMAIL",              "MEDIUM", 1),
+    (re.compile(r"\b[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}\b"),                                    "EMAIL",              "MEDIUM", 1),
     (re.compile(r"\b(?:\d[ \-]?){12,18}\d\b"),                                                                 "CREDIT_CARD",        "MEDIUM", 1),
 ]
 
