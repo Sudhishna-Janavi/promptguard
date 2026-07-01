@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+.venv/
+venv/
+
+# IMPORTANT: never ignore .kiro — it is the hackathon judging evidence.
+!.kiro/

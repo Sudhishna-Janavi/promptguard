@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "promptguard": {
+      "command": "/opt/anaconda3/bin/python",
+      "args": ["/Users/sudhishna/Desktop/promptguard-kiro/mcp_server.py"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": ["scan_prompt", "redact_prompt"]
+    }
+  }
+}
