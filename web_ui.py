@@ -198,7 +198,13 @@ def _build_html_page() -> str:
   <p class="subtitle">Local privacy firewall — scan your prompt before sending it to an AI service.</p>
 
   <label for="input-text">Prompt text</label>
-  <textarea id="input-text" placeholder="Paste your prompt here..."></textarea>
+  <textarea id="input-text" placeholder="Paste your prompt here...">Hey Kiro, help me debug my deploy config.
+AWS key: AKIAIOSFODNN7EXAMPLE
+OpenAI key: sk-Ab12Cd34Ef56Gh78Ij90Kl12Mn34Op56
+GitHub token: ghp_1234567890abcdefABCDEF1234567890abcd
+DB password = SuperSecret123
+Email me at jane.doe@company.com
+Card on file: 4111 1111 1111 1111</textarea>
   <button id="scan-btn" onclick="runScan()">Scan</button>
   <p id="error-msg" class="error-msg" style="display:none"></p>
 
