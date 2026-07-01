@@ -127,25 +127,15 @@ def _register_tools(server):
 
 
 def main():
-    """Entry point: initialise and start the MCP server."""
+    """Entry point: initialise and start the MCP server over stdio.
+
+    Uses the high-level FastMCP API, which handles tool discovery
+    (list_tools), invocation (call_tool), and the stdio transport. Each
+    registered tool delegates to the pure functions above so behaviour is
+    identical to calling the scanner directly.
+    """
     try:
-        from mcp.server import Server
-        from mcp.server.stdio import stdio_server
-
-        server = Server("promptguard")
-
-        @server.call_tool()
-        async def call_tool(name, arguments):
-            text = arguments.get("text")
-            if name == "scan_prompt":
-                return scan_prompt(text)
-            elif name == "redact_prompt":
-                return redact_prompt(text)
-            else:
-                return {"error": {"code": "UNKNOWN_TOOL", "message": f"Unknown tool: {name}"}}
-
-        import asyncio
-        asyncio.run(stdio_server(server))
+        from mcp.server.fastmcp import FastMCP
     except ImportError:
         import sys
         print(
@@ -153,6 +143,25 @@ def main():
             file=sys.stderr,
         )
         sys.exit(1)
+
+    mcp = FastMCP("promptguard")
+
+    @mcp.tool(name="scan_prompt")
+    def _scan_tool(text: str) -> dict:
+        """Scan text for secrets and PII before it is sent to an LLM.
+
+        Returns a verdict (BLOCK / WARN / SAFE), the findings with masked
+        previews, and a redacted-safe version. All detection runs locally.
+        """
+        return scan_prompt(text)
+
+    @mcp.tool(name="redact_prompt")
+    def _redact_tool(text: str) -> dict:
+        """Return a redacted-safe version of the text (secrets/PII removed)
+        plus the overall verdict."""
+        return redact_prompt(text)
+
+    mcp.run()
 
 
 if __name__ == "__main__":
